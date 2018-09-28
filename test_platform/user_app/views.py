@@ -15,14 +15,14 @@ def login_action(request):
     if request.method == "POST":
         username = request.POST.get("username", "")
         password = request.POST.get("password", "")
-        print(username)
-        print(type(username))
-        print(password)
-        print(type(password))
+        # print(username)
+        # print(type(username))
+        # print(password)
+        # print(type(password))
         if username == "" or password == "":
             return render(request, "index.html", {"error": "用户名或密码为空"})
         else:
-            user = auth.authenticate(username=username, password=password)
+            user = auth.authenticate(username=username, password=password) # 记录用户登录状态
             if user is not None:
                 auth.login(request, user)  # 验证登录
                 return render(request, "project_manage.html")

@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.contrib import auth
+from user_app.models import Project, Module
 # Create your views here.
 # 主要代码逻辑
 
@@ -37,7 +38,9 @@ def login_action(request):
 @login_required  # 判断用户是否登录
 def project_manage(request):
     username = request.session.get('user', '')  # 读取浏览器 session
-    return render(request, "project_manage.html", {"user": username})
+    project_all = Project.objects.all()
+    print(project_all)
+    return render(request, "project_manage.html", {"user": username, "projects": project_all})
 
 
 def logout(request):

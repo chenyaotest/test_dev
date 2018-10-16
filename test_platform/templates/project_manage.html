@@ -42,7 +42,7 @@
                 </ul>
             </div>
             <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-
+            {% if type == 'list' %}
                 <h3 class="sub-header">项目列表</h3>
                 <br/>
                 <a href="/manage/add_project/" class="btn btn-default btn-sm active" style="float: right;">
@@ -75,6 +75,17 @@
                     </table>
                 </div>
             </div>
+        {% endif %}
+
+        {% if type == 'add' %}
+            <h3 class="sub-header">添加项目</h3>
+                <br/>
+
+                <div class="table-responsive">
+                    在这里添加项目吧！
+                </div>
+            </div>
+        {% endif %}
         </div>
     </div>
 

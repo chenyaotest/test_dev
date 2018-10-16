@@ -8,11 +8,11 @@ def project_manage(request):
     username = request.session.get('user', '')  # 读取浏览器 session
     project_all = Project.objects.all()
     # print(project_all)
-    return render(request, "project_manage.html", {"user": username, "projects": project_all})
+    return render(request, "project_manage.html", {"user": username, "projects": project_all, "type": "list"})
 
 
 def add_project(request):
     username = request.session.get('user', '')  # 读取浏览器 session
     project_all = Project.objects.all()
     # print(project_all)
-    return render(request, "project_manage.html", {"user": username, "projects": project_all})
+    return render(request, "project_manage.html", {"type": "add"})

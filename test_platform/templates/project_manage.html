@@ -71,8 +71,9 @@
                                 <td>{{ project.status }}</td>
                                 <td>{{ project.create_time }}</td>
                                 <td>
-                                    <a href="/manage/edit_project/{{project.id}}/">编辑</a>
-                                    <a href="/manage/delete_project/{{project.id}}/">删除</a>
+                                    <a href="/manage/edit_project/{{project.id}}/" data-toggle="tooltip" title="编辑"><span class="glyphicon glyphicon-pencil"></span></a>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <a href="/manage/delete_project/{{project.id}}/" data-toggle="tooltip" title="删除"><span class="glyphicon glyphicon-remove"></span></a>
                                 </td>
                             </tr>
                             {% endfor %}

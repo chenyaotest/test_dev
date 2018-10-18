@@ -59,6 +59,7 @@
                                 <th>描述</th>
                                 <th>状态</th>
                                 <th>创建时间</th>
+                                <th>操作</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -69,6 +70,10 @@
                                 <td>{{ project.describe }}</td>
                                 <td>{{ project.status }}</td>
                                 <td>{{ project.create_time }}</td>
+                                <td>
+                                    <a href="/manage/edit_project/{{project.id}}/">编辑</a>
+                                    <a href="/manage/delete_project/{{project.id}}/">删除</a>
+                                </td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -82,7 +87,25 @@
                 <br/>
 
                 <div class="table-responsive">
-                    在这里添加项目吧！
+                    <form action="/manage/add_project/" method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                        <button type="submit" class="btn btn-primary" value="Submit">保存</button>
+                    </form>
+                </div>
+            </div>
+        {% endif %}
+
+        {% if type == 'edit' %}
+            <h3 class="sub-header">编辑项目</h3>
+                <br/>
+
+                <div class="table-responsive">
+                    <form action="/manage/edit_project/{{ pid }}/" method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                        <button type="submit" class="btn btn-primary" value="Submit">保存</button>
+                    </form>
                 </div>
             </div>
         {% endif %}

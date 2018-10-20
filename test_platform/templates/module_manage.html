@@ -29,8 +29,8 @@
         <div class="row">
             <div class="col-sm-3 col-md-2 sidebar">
                 <ul class="nav nav-sidebar">
-                    <li class="active"><a href="#">项目管理</a></li>
-                    <li><a href="/manage/module_manage/">模块管理</a></li>
+                    <li><a href="/manage/project_manage/">项目管理</a></li>
+                    <li class="active"><a href="/manage/module_manage/">模块管理</a></li>
                 </ul>
                 <ul class="nav nav-sidebar">
                     <li><a href="">用例管理</a></li>
@@ -43,10 +43,10 @@
             </div>
             <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
             {% if type == 'list' %}
-                <h3 class="sub-header">项目列表</h3>
+                <h3 class="sub-header">模块列表</h3>
                 <br/>
-                <a href="/manage/add_project/" class="btn btn-default btn-sm active" style="float: right;">
-                    <span class="glyphicon glyphicon-plus"  style=" color: rgb(30, 110, 190); font-size: 14px;"> 创建项目</span>
+                <a href="/manage/add_module/" class="btn btn-default btn-sm active" style="float: right;">
+                    <span class="glyphicon glyphicon-plus"  style=" color: rgb(30, 110, 190); font-size: 14px;"> 创建模块</span>
                 </a>
                 <br/><br/>
 
@@ -57,23 +57,23 @@
                                 <th>id</th>
                                 <th>名称</th>
                                 <th>描述</th>
-                                <th>状态</th>
+                                <th>所属项目</th>
                                 <th>创建时间</th>
                                 <th>操作</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% for project in projects %}
+                            {% for module in modules %}
                             <tr>
-                                <td>{{ project.id }}</td>
-                                <td>{{ project.name }}</td>
-                                <td>{{ project.describe }}</td>
-                                <td>{{ project.status }}</td>
-                                <td>{{ project.create_time | date:"Y-m-d H:i:s" }}</td>
+                                <td>{{ module.id }}</td>
+                                <td>{{ module.name }}</td>
+                                <td>{{ module.describe }}</td>
+                                <td>{{ module.project }}</td>
+                                <td>{{ module.create_time | date:"Y-m-d H:i:s" }}</td>
                                 <td>
-                                    <a href="/manage/edit_project/{{project.id}}/" data-toggle="tooltip" title="编辑"><span class="glyphicon glyphicon-pencil"></span></a>
+                                    <a href="/manage/edit_module/{{module.id}}/" data-toggle="tooltip" title="编辑"><span class="glyphicon glyphicon-pencil"></span></a>
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <a href="/manage/delete_project/{{project.id}}/" data-toggle="tooltip" title="删除" ><span class="glyphicon glyphicon-remove"></span></a>
+                                    <a href="/manage/delete_module/{{module.id}}/" data-toggle="tooltip" title="删除" ><span class="glyphicon glyphicon-remove"></span></a>
                                 </td>
                             </tr>
                             {% endfor %}
@@ -84,11 +84,11 @@
         {% endif %}
 
         {% if type == 'add' %}
-            <h3 class="sub-header">添加项目</h3>
+            <h3 class="sub-header">添加模块</h3>
                 <br/>
 
                 <div class="table-responsive">
-                    <form action="/manage/add_project/" method="post">
+                    <form action="/manage/add_module/" method="post">
                     {% csrf_token %}
                     {{ form.as_p }}
                         <button type="submit" class="btn btn-primary" value="Submit">保存</button>
@@ -98,14 +98,14 @@
         {% endif %}
 
         {% if type == 'edit' %}
-            <h3 class="sub-header">编辑项目</h3>
+            <h3 class="sub-header">编辑模块</h3>
                 <br/>
 
                 <div class="table-responsive">
                 <form role="form"  method="post">
                         {% csrf_token %}
                         {{ form.as_p }}
-                        <button onclick="window.location.href='/manage/edit_project/{{ pid }}/'" type="submit" class="btn btn-primary">保存</button>
+                        <button onclick="window.location.href='/manage/edit_module/{{ mid }}/'" type="submit" class="btn btn-primary">保存</button>
                 </form>
                 </div>
             </div>

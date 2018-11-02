@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 
 
 class UserModuleTest(TestCase):
-    """ 模型测试 """
+    """ 用户模型测试 """
 
     def setUp(self):
         User.objects.create_user("test01", "test01@gmail.com", "test123456")

@@ -35,6 +35,7 @@ def login_action(request):
     else:
         return render(request, "index.html")
 
+
 @login_required
 def logout(request):
     auth.logout(request)  # 清除用户登录状态

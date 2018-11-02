@@ -33,7 +33,7 @@
                     <li class="active"><a href="/manage/module_manage/">模块管理</a></li>
                 </ul>
                 <ul class="nav nav-sidebar">
-                    <li><a href="">用例管理</a></li>
+                    <li><a href="/interface/case_manage/">用例管理</a></li>
                     <li><a href="">任务管理</a></li>
                 </ul>
                 <ul class="nav nav-sidebar">
@@ -51,7 +51,7 @@
                 <br/><br/>
 
                 <div class="table-responsive">
-                    <table class="table table-striped">
+                    <table class="table table-striped" id="mlist">
                         <thead>
                             <tr>
                                 <th>id</th>
@@ -91,7 +91,7 @@
                     <form action="/manage/add_module/" method="post">
                     {% csrf_token %}
                     {{ form.as_p }}
-                        <button type="submit" class="btn btn-primary" value="Submit">保存</button>
+                        <button type="submit" class="btn btn-primary" value="Submit" id="SaveButton">保存</button>
                     </form>
                 </div>
             </div>
@@ -105,7 +105,7 @@
                 <form role="form"  method="post">
                         {% csrf_token %}
                         {{ form.as_p }}
-                        <button onclick="window.location.href='/manage/edit_module/{{ mid }}/'" type="submit" class="btn btn-primary">保存</button>
+                        <button onclick="window.location.href='/manage/edit_module/{{ mid }}/'" type="submit" class="btn btn-primary" id="SaveButton">保存</button>
                 </form>
                 </div>
             </div>

@@ -1,13 +1,23 @@
 {% extends "case_manage.html" %}
-{% block api_debug %}
+{% block debug_case %}
 <br><br>
     <fieldset>
         <div id="legend" class="">
-            <legend class="">在线postman</legend>
+            <legend class="">调试/创建用例</legend>
         </div>
 
         <div style="width:80%; margin-left: 20px;">
         <form action="/debug/" method="get" class="bs-example bs-example-form" role="form" style="margin-top: 30px">
+
+            <div class="form-group" style="height: 20px;">
+                <label>项目：</label>
+                <select id="project_name"></select>
+            </div>
+
+            <div class="form-group">
+                <label>模块：</label>
+                <select id="module_name"></select>
+            </div>
 
             <div class="input-group">
                 <span class="input-group-addon">名称</span>
@@ -58,8 +68,20 @@
                 <input id="req_parameter" type="text" class="form-control">
             </div>
             <p style="color:#8B8989">说明：以字典的方式设置参数，如：{"id":1, "name":"名称"}</p>
+
+            <p>断言：</p>
+            <div style="width: 100%; height: 60px;">
+                <div style="float: left;width: 90%; height: 60px;" >
+                    <textarea id="assert_text" class="form-control" rows="3" name=textarea></textarea>
+                </div>
+                <div style="float: right;width: 10%; height: 60px;margin-top: 40px;">
+                    <button type="button" class="btn btn-primary" id="assert_button" style="float: right;margin-right: 10px;">验证</button>
+                </div>
+            </div>
+            <br><br><br>
             <div style="width: 100%; height: 60px;">
                 <button type="button" class="btn btn-primary" id="send" style="float: right;margin-right: 10px;">调试</button>
+                <button type="button" class="btn btn-primary" id="save" style="float: right;margin-right: 10px;">保存</button>
             </div>
 
         </form>
@@ -74,8 +96,35 @@
     </fieldset>
 
 <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
-    <script>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript">
+
+
+    //加载测试用例信息
+    let url_path = window.document.location.pathname;
+    let case_id = url_path.split('/')[3];
+    //window.alert(case_id)
+    CaseInit(case_id);
+
         $(document).ready(function () {
+
+            $("#assert_button").click(function () {
+               let assert_text = $("#assert_text").val();
+               let result = $("#result").val();
+
+               if(assert_text === "" || result === ""){
+                   window.alert("验证内容不能为空！")
+               }
+               // 发送一个post请求
+               $.post("/interface/api_assert/", {
+                   "assert_text": assert_text,
+                   "result_text": result,
+                }, function (resp) {
+                   console.log("resp", resp);
+                   window.alert(resp);
+                });
+            });
+
             $("#send").click(function () {
                let url = $("#req_url").val();
                let method = $('input[name="req_method"]:checked').val();
@@ -94,6 +143,41 @@
                    "req_url": url,
                    "req_method": method,
                    "req_parameter": parameter
+                }, function (resp) {
+                    $("#result").html(resp);
+                });
+            });
+
+            $("#save").click(function () {
+                let name = $("#req_name").val();
+               let url = $("#req_url").val();
+               let method = $('input[name="req_method"]:checked').val();
+               let type = $('input[name="req_type"]:checked').val();
+               let header = $("#req_header").val();
+               let parameter = $("#req_parameter").val();
+               let module_name = $('select[id="module_name"]').val();
+
+               console.log("module_name", module_name);
+               console.log("req_type", type);
+               //window.alert("hello");
+               if (name === "") {
+                window.alert("名称不能为空");
+            } else if (url === "") {
+                window.alert("请求的URL不能为空");
+            } else if (method === "") {
+                window.alert("请求的方法不能为空");
+            } else if (parameter === "") {
+                parameter = "{}";
+            }
+               // 发送一个post请求
+               $.post("/interface/save_case/", {
+                   "name": name,
+                   "req_url": url,
+                   "req_method": method,
+                   "req_type": type,
+                   "req_header": header,
+                   "req_parameter": parameter,
+                   "req_module": module_name,
                 }, function (resp) {
                     $("#result").html(resp);
                 });

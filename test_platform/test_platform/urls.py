@@ -16,11 +16,16 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from user_app import views
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index),
-    path('login_action/', views.login_action),
-    path('logout/', views.logout),
+    path("accounts/login/", views.index),
+    path("login_action/", views.login_action),
+    path("logout/", views.logout),
     path('manage/', include('project_app.urls')),
     path('interface/', include('interface_app.urls')),
+    #path("project_manage/", views.project_manage),
+    #path("add_project/", views.add_project),
 ]

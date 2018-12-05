@@ -1,38 +1,81 @@
+
 // 获取指定case_id的用例信息
-let CaseInit = function (case_id) {
+var CaseInit = function (case_id) {
+    
+    //window.alert("abc")
+    //document.write("<script language=javascript src='./jsProject.js'><\/script>");
 
     function getCaseInfo() {
-        // 调用获取用例信息接口
-        $.post("/interface/get_case_info/", {"caseId": case_id},
-            function (resp) {
-                if (resp.success === "true") {
-                    let result = resp.data;
-                    //window.alert("hello")
-                    console.log("结果", result);
-                    document.getElementById("req_name").value = result.name;
-                    document.getElementById("req_url").value = result.url;
-                    document.getElementById("req_header").value = result.req_header;
-                    document.getElementById("req_parameter").value = result.req_parameter;
+        // 获取某个用例的信息
+        $.post("/interface/get_case_info/", {
+            "caseId": case_id,
+        }, function (resp) {
+            if (resp.success === "true") {
+                let result = resp.data;
+                console.log("结果", result);
+                document.getElementById("req_name").value = result.name;
+                document.getElementById("req_url").value = result.url;
+                document.getElementById("req_header").value = result.reqHeader;
+                document.getElementById("req_parameter").value = result.reqParameter;
+                document.getElementById("assert_text").value = result.assertText;
 
-                    if (result.req_method == "post") {
-                        document.getElementById("post").setAttribute("checked", "")
-                    }
-                    if (result.req_type == "json") {
-                            document.getElementById("json").setAttribute("checked", "")
-                        }
-                        // 初始化菜单
-                        ProjectInit('project_name', 'module_name', result.project_name, result.module_name);
-                    }
+                if (result.reqMethod === "post"){
+                    document.getElementById("post").setAttribute("checked", "")
+                }
 
+                if (result.reqType === "json"){
+                    document.getElementById("json").setAttribute("checked", "")
+                }
 
-                    else{window.alert("用例ID不存在！")}
+                // window.alert(result.projectName);
+                // window.alert(result.moduleName);
 
-                        //项目列表和模块列表的二级联动
-                    ProjectInit('project_name', 'module_name');
+                // 初始化菜单
+                ProjectInit('project_name', 'module_name', result.projectName, result.moduleName);
 
-            });
+            }else{
+                window.alert(resp.message);
+            }
+            //$("#result").html(resp);
+        });
     }
     // 调用getCaseInfo函数
     getCaseInfo();
 
-}
+};
+
+
+// 获取用例列表
+var CaseListInit = function () {
+
+    var options = "";
+    function getCaseListInfo() {
+        // 获取某个用例的信息
+        $.get("/interface/get_case_list", {}, function (resp) {
+            if (resp.success === "true") {
+                console.log(resp.data);
+                let cases = resp.data;
+                for (let i = 0; i < cases.length; i++){
+                    let option = '<input type="checkbox" name="' + cases[i].name 
+                        + '" value="' + cases[i].id + '" /> ' + cases[i].name + '<br>'
+                    
+                    options = options + option;
+                    
+                }
+                let devCaseList = document.querySelector(".caseList");
+                devCaseList.innerHTML = options;
+
+                console.log("最后：", options);
+                
+
+            } else {
+                window.alert(resp.message);
+            }
+            //$("#result").html(resp);
+        });
+    }
+
+    // 调用getCaseListInfo函数
+    getCaseListInfo();
+
+};

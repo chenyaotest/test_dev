@@ -29,28 +29,39 @@
         <div class="row">
             <div class="col-sm-3 col-md-2 sidebar">
                 <ul class="nav nav-sidebar">
-                    <li class="active"><a href="#">项目管理</a></li>
-                    <li><a href="/manage/module_manage/">模块管理</a></li>
+                    <li class="active"><a href="#">
+                        <span class="glyphicon glyphicon-th-large"></span> 项目管理</a>
+                    </li>
+                    <li><a href="/manage/module_manage/">
+                        <span class="glyphicon glyphicon-th"></span> 模块管理</a>
+                    </li>
                 </ul>
                 <ul class="nav nav-sidebar">
-                    <li><a href="/interface/case_manage/">用例管理</a></li>
-                    <li><a href="">任务管理</a></li>
+                    <li><a href="/interface/case_manage/">
+                        <span class="glyphicon glyphicon-th-list"></span> 用例管理</a>
+                    </li>
+                    <li><a href="/interface/task_manage/">
+                        <span class="glyphicon glyphicon-tasks"></span> 任务管理</a>
+                    </li>
                 </ul>
                 <ul class="nav nav-sidebar">
-                    <li><a href="">mockserver</a></li>
-                    <li><a href="">测试工具</a></li>
+                    <li><a href="#">
+                        <span class="glyphicon glyphicon-log-in"></span> mockserver</a>
+                    </li>
+                    <li><a href="#">
+                        <span class="glyphicon glyphicon-wrench"></span> 测试工具</a>
+                    </li>
                 </ul>
             </div>
-            <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-            {% if type == 'list' %}
-                <h3 class="sub-header">项目列表</h3>
-                <br/>
-                <a href="/manage/add_project/" class="btn btn-default btn-sm active" style="float: right;">
-                    <span class="glyphicon glyphicon-plus"  style=" color: rgb(30, 110, 190); font-size: 14px;"> 创建项目</span>
-                </a>
-                <br/><br/>
 
-                <div class="table-responsive" id="plist">
+            {% if type == 'list'%} 
+            <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+                <h3 class="sub-header" >项目列表
+                    <button type="button" class="btn btn-success"
+                    style="float: right;"
+                    onclick="window.location.href='/manage/add_project/'">创建</button>
+                </h3>
+                <div class="table-responsive">
                     <table class="table table-striped">
                         <thead>
                             <tr>
@@ -71,9 +82,8 @@
                                 <td>{{ project.status }}</td>
                                 <td>{{ project.create_time | date:"Y-m-d H:i:s" }}</td>
                                 <td>
-                                    <a href="/manage/edit_project/{{project.id}}/" data-toggle="tooltip" title="编辑"><span class="glyphicon glyphicon-pencil"></span></a>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <a href="/manage/delete_project/{{project.id}}/" data-toggle="tooltip" title="删除" ><span class="glyphicon glyphicon-remove"></span></a>
+                                    <a href="/manage/edit_project/{{project.id}}/">编辑</a>
+                                    <a href="/manage/delete_project/{{project.id}}/">删除</a>
                                 </td>
                             </tr>
                             {% endfor %}
@@ -81,36 +91,51 @@
                     </table>
                 </div>
             </div>
-        {% endif %}
+            {% endif %}
 
-        {% if type == 'add' %}
-            <h3 class="sub-header">添加项目</h3>
-                <br/>
 
-                <div class="table-responsive">
-                    <form action="/manage/add_project/" method="post">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                        <button type="submit" class="btn btn-primary" value="Submit" id="SaveButton">保存</button>
-                    </form>
+            {% if type == 'add'%}
+            <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+                <h3 class="sub-header">添加项目
+                    <button class="btn btn-default" onclick="window.location.href='/manage/project_manage/'" style="margin-left: 180px;">取消
+                    </button>
+                </h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="table-responsive">
+                            <form action="/manage/add_project/" method="post">
+                                {% csrf_token %} 
+                                {{ form.as_p }}
+                                <button type="submit" class="btn btn-primary">创建</button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
+                
             </div>
-        {% endif %}
-
-        {% if type == 'edit' %}
-            <h3 class="sub-header">编辑项目</h3>
-                <br/>
-
+            {% endif %}
+            
+            {% if type == 'edit'%}
+            <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+                <h3 class="sub-header">编辑项目
+                    <button class="btn btn-default" 
+                            onclick="window.location.href='/manage/project_manage/'"
+                            style="margin-left: 180px;">取消
+                    </button>
+                </h3>
+                
                 <div class="table-responsive">
-                <form role="form"  method="post">
+                    <form role="form" method="post">
                         {% csrf_token %}
                         {{ form.as_p }}
-                        <button onclick="window.location.href='/manage/edit_project/{{ pid }}/'" type="submit" class="btn btn-primary" id="SaveButton">保存</button>
-                </form>
+                        <button type="submit" class="btn btn-primary">保存</button>
+                    </form>    
                 </div>
             </div>
-        {% endif %}
+            {% endif %}
         </div>
+
+
     </div>
 
 {% endblock %}

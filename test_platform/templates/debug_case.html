@@ -1,12 +1,12 @@
 {% extends "case_manage.html" %}
 {% block debug_case %}
-<br><br>
-    <fieldset>
-        <div id="legend" class="">
-            <legend class="">调试/创建用例</legend>
-        </div>
 
-        <div style="width:80%; margin-left: 20px;">
+<fieldset>
+    <div id="legend" class="">
+        <legend class="">调试接口用例</legend>
+    </div>
+
+    <div style="width:80%; margin-left: 20px;">
         <form action="/debug/" method="get" class="bs-example bs-example-form" role="form" style="margin-top: 30px">
 
             <div class="form-group" style="height: 20px;">
@@ -38,12 +38,6 @@
                 <label class="radio-inline">
                     <input type="radio" name="req_method" id="post" value="post"> POST
                 </label>
-                <label class="radio-inline">
-                    <input type="radio" name="req_method" id="pub" value="put"> PUT
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="req_method" id="delete" value="delete"> DELETE
-                </label>
             </div>
 
             <div style="margin-top: 10px;">
@@ -68,121 +62,145 @@
                 <input id="req_parameter" type="text" class="form-control">
             </div>
             <p style="color:#8B8989">说明：以字典的方式设置参数，如：{"id":1, "name":"名称"}</p>
-
-            <p>断言：</p>
-            <div style="width: 100%; height: 60px;">
-                <div style="float: left;width: 90%; height: 60px;" >
+            
+            <p>验证数据：</p>
+            <div style="height: 100px">
+                <div style="float: left; width: 90%;">
                     <textarea id="assert_text" class="form-control" rows="3" name=textarea></textarea>
                 </div>
-                <div style="float: right;width: 10%; height: 60px;margin-top: 40px;">
-                    <button type="button" class="btn btn-primary" id="assert_button" style="float: right;margin-right: 10px;">验证</button>
+                <div style="margin-top: 38px; float: right; width: 10%;">
+                    <button type="button" class="btn btn-default" id="assert" style="float: right;margin-right: 10px;">验证</button>
                 </div>
             </div>
-            <br><br><br>
+
             <div style="width: 100%; height: 60px;">
-                <button type="button" class="btn btn-primary" id="send" style="float: right;margin-right: 10px;">调试</button>
-                <button type="button" class="btn btn-primary" id="save" style="float: right;margin-right: 10px;">保存</button>
+                <button type="button" class="btn btn-success" id="send" style="float: right;margin-right: 10px;">调试</button>
+                <button type="button" class="btn btn-primary" id="update" style="float: right;margin-right: 10px;">更新</button>
             </div>
 
         </form>
 
-        </div>
+    </div>
 
-        <div style="width:80%; margin-left: 20px;">
-            <p>返回结果：</p>
-            <textarea id="result" class="form-control" rows="10" name=textarea></textarea>
-        </div>
+    <div style="width:80%; margin-left: 20px;">
+        <p>返回结果：</p>
+        <textarea id="result" class="form-control" rows="10" name=textarea></textarea>
+    </div>
 
-    </fieldset>
+</fieldset>
 
 <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
-    <script type="text/javascript">
+<script type="text/javascript">
+    
+    let url_path = document.location.pathname;
+    let case_id = url_path.split("/")[3];
 
-
-    //加载测试用例信息
-    let url_path = window.document.location.pathname;
-    let case_id = url_path.split('/')[3];
-    //window.alert(case_id)
+    //调用获取用例信息的方法
     CaseInit(case_id);
 
-        $(document).ready(function () {
+    $(document).ready(function () {
 
-            $("#assert_button").click(function () {
-               let assert_text = $("#assert_text").val();
-               let result = $("#result").val();
+        // 调试
+        $("#send").click(function () {
+            let url = $("#req_url").val();
+            let method = $('input[name="req_method"]:checked').val();
+            let type = $('input[name="req_type"]:checked').val();
+            let header = $("#req_header").val();
+            let parameter = $("#req_parameter").val();
 
-               if(assert_text === "" || result === ""){
-                   window.alert("验证内容不能为空！")
-               }
-               // 发送一个post请求
-               $.post("/interface/api_assert/", {
-                   "assert_text": assert_text,
-                   "result_text": result,
-                }, function (resp) {
-                   console.log("resp", resp);
-                   window.alert(resp);
-                });
+            if(url === ""){
+                window.alert("请求的URL不能为空");
+                return;
+            }else if (method === ""){
+                window.alert("请求的方法不能为空");
+                return;
+            }else if (parameter === ""){
+                parameter = "{}";
+            }
+
+            // 调试接口
+            $.post("/interface/api_debug/", {
+                "req_url": url,
+                "req_method": method,
+                "req_type": type,
+                "req_header": header,
+                "req_parameter": parameter
+            }, function (resp) {
+                if(resp.success === "true"){
+                    $("#result").html(resp.data);
+                }else{
+                    window.alert(resp.message);
+                }
             });
 
-            $("#send").click(function () {
-               let url = $("#req_url").val();
-               let method = $('input[name="req_method"]:checked').val();
-               let parameter = $("#req_parameter").val();
-               //console.log(url, method);
-               //window.alert("hello");
-               if(url === ""){
-                   window.alert("请求的URL不能为空");
-               }else if (method === ""){
-                   window.alert("请求的方法不能为空");
-               }else if (parameter === ""){
-                   parameter = "{}";
-               }
-               // 发送一个post请求
-               $.post("/interface/api_debug/", {
-                   "req_url": url,
-                   "req_method": method,
-                   "req_parameter": parameter
-                }, function (resp) {
-                    $("#result").html(resp);
-                });
-            });
+        });
 
-            $("#save").click(function () {
-                let name = $("#req_name").val();
-               let url = $("#req_url").val();
-               let method = $('input[name="req_method"]:checked').val();
-               let type = $('input[name="req_type"]:checked').val();
-               let header = $("#req_header").val();
-               let parameter = $("#req_parameter").val();
-               let module_name = $('select[id="module_name"]').val();
+        // 更新
+        $("#update").click(function () {
+            let module_name = $('select[id="module_name"]').val();
+            let name = $("#req_name").val();
+            let url = $("#req_url").val();
+            let method = $('input[name="req_method"]:checked').val();
+            let parameter = $("#req_parameter").val();
+            let req_type = $('input[name="req_type"]:checked').val();
+            let header = $("#req_header").val();
+            let assert_text = $("#assert_text").val();
 
-               console.log("module_name", module_name);
-               console.log("req_type", type);
-               //window.alert("hello");
-               if (name === "") {
+            if (name === "") {
                 window.alert("名称不能为空");
-            } else if (url === "") {
+            }else if (url === "") {
                 window.alert("请求的URL不能为空");
             } else if (method === "") {
                 window.alert("请求的方法不能为空");
             } else if (parameter === "") {
                 parameter = "{}";
             }
-               // 发送一个post请求
-               $.post("/interface/save_case/", {
-                   "name": name,
-                   "req_url": url,
-                   "req_method": method,
-                   "req_type": type,
-                   "req_header": header,
-                   "req_parameter": parameter,
-                   "req_module": module_name,
-                }, function (resp) {
-                    $("#result").html(resp);
-                });
+
+            // 保存用例接口
+            $.post("/interface/update_case/", {
+                "cid": case_id,
+                "name": name,
+                "req_url": url,
+                "req_method": method,
+                "req_parameter": parameter,
+                "req_type": req_type,
+                "header": header,
+                "module": module_name,
+                "assert_text": assert_text,
+            }, function (resp) {
+                if(resp.success === "true"){
+                    window.alert(resp.message);
+                }else{
+                    window.alert(resp.message);
+                }
             });
+
         });
-    </script>
+
+        //验证数据接口
+        $("#assert").click(function () {
+
+            let result = $("#result").val();
+            let assert = $("#assert_text").val();
+
+            if (result === "" || assert === "") {
+                window.alert("验证数据不能为空！");
+            }
+
+            //window.alert("发送请求");
+            // 发送一个post请求
+            $.post("/interface/api_assert/", {
+                "result": result,
+                "assert": assert,
+            }, function (resp) {
+                //console.log("6666", resp);
+                window.alert(resp.message);
+            });
+
+        });
+
+
+    });
+</script>
 
 {% endblock %}

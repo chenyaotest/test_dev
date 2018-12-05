@@ -32,8 +32,8 @@ class LoginTests(StaticLiveServerTestCase):
         sleep(1)
         self.driver.find_element_by_id('LoginButton').click()
         error_hint = self.driver.find_element_by_id("error").text
-        # print(error_hint)
-        self.assertEqual("用户名或密码为空", error_hint)
+        print(error_hint)
+        self.assertEqual("用户名或者密码为空", error_hint)
 
     def test_login_error(self):
         self.driver.get('%s%s' % (self.live_server_url, '/'))
@@ -44,8 +44,8 @@ class LoginTests(StaticLiveServerTestCase):
         sleep(1)
         self.driver.find_element_by_id('LoginButton').click()
         error_hint = self.driver.find_element_by_id("error").text
-        # print(error_hint)
-        self.assertEqual("用户名或密码错误", error_hint)
+        print(error_hint)
+        self.assertEqual("用户名或者密码错误", error_hint)
 
     def test_login_success(self):
         self.driver.get('%s%s' % (self.live_server_url, '/'))
@@ -55,6 +55,7 @@ class LoginTests(StaticLiveServerTestCase):
         password_input.send_keys("test123456")
         sleep(1)
         self.driver.find_element_by_id('LoginButton').click()
-        success_hint = self.driver.find_element_by_class_name("navbar-brand").text
-        # print(error_hint)
-        self.assertEqual("测试平台", success_hint)
+        error_hint = self.driver.find_element_by_class_name("navbar-brand").text
+        print(error_hint)
+        self.assertEqual("测试平台", error_hint)
+
